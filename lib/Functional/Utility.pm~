@@ -1,0 +1,35 @@
+package Functional::Utility;
+use base qw(Exporter);
+
+use strict;
+use warnings;
+
+our @EXPORT_OK = qw(context hook_run_hook throttle);
+
+# begin misplaced functions
+sub context {
+	my ($lookback) = @_;
+	my $wa = (caller($lookback))[5];
+	return 'VOID' unless defined $wa;
+	return 'SCALAR' if !$wa;
+	return 'LIST' if $wa;
+}
+
+sub hook_run_hook {
+	my ($pre, $code, $post) = @_;
+
+	$pre->();
+
+	my $callers_context = context(1);
+	my @ret;
+	+{
+	  LIST => sub { @ret = $code->() },
+	  SCALAR => sub { $ret[0] = $code->() },
+	  VOID => sub { $code->(); return },
+	}->{$callers_context}->();
+
+	$post->();
+
+	return $callers_context eq 'LIST' ? @ret : $ret[0];
+}
+
