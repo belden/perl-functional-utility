@@ -4,12 +4,17 @@ use base qw(Exporter);
 use strict;
 use warnings;
 
-our @EXPORT_OK = qw(context hook_run_hook throttle);
-our $VERSION = 0.01;
+use Time::HiRes ();
+
+our @EXPORT_OK = qw(context hook_run_hook hook_run throttle);
+
+# most of my modules start at 0.01. This one starts at 1.00 because
+# I actually use this code in production.
+our $VERSION = 1.00;
 
 sub context {
 	my ($lookback) = @_;
-	my $wa = (caller($lookback))[5];
+	my $wa = (caller($lookback || 0))[5];
 	return 'VOID' unless defined $wa;
 	return 'SCALAR' if !$wa;
 	return 'LIST' if $wa;
@@ -18,7 +23,7 @@ sub context {
 sub hook_run_hook {
 	my ($pre, $code, $post) = @_;
 
-	$pre->();
+	$pre->() if $pre;
 
 	my $callers_context = context(1);
 	my @ret;
@@ -28,36 +33,24 @@ sub hook_run_hook {
 	  VOID => sub { $code->(); return },
 	}->{$callers_context}->();
 
-	$post->();
+	$post->() if $post;
 
 	return $callers_context eq 'LIST' ? @ret : $ret[0];
 }
 
+sub hook_run {
+	my (%args) = @_;
+	return hook_run_hook(@args{qw(before run after)});
+}
+
 {
-	my ($delay_time);
-	use Time::HiRes ();
+	my ($delay_time, $nth_run);
 	sub throttle_delay (&$) {
 		my ($code, $delay) = @_;
 		my $delta = Time::HiRes::time - ($delay_time = Time::HiRes::time);
-		Time::HiRes::sleep($delay - $delta) if $delay - $delta > 0;
+		Time::HiRes::sleep($delay - $delta) if $nth_run && $delay - $delta > 0;
+		$nth_run ||= 1;
 		$code->();
-	}
-
-	sub hook_run_hook {
-		my ($before, $code, $after) = @_;
-		$before->();
-
-		my @ret;
-		if (wantarray) {
-			@ret = $code->();
-		} elsif (defined wantarray) {
-			$ret[0] = $code->();
-		} else {
-			$code->();
-		}
-
-		$after->();
-		return wantarray ? @ret : $ret[0];
 	}
 
 	my ($ultimate_factor_duration, $penultimate_factor_duration);
@@ -117,10 +110,25 @@ as a single run takes:
 
     throttle { print scalar(localtime) . "\n"; sleep 1 } factor => 3 for 1..5;
 
+Add before and after hooks around some coderef, calling and returning coderef's output
+back to caller in the correct context:
+
+    my $start;
+
+    hook_run(
+      before => sub { $start = Time::HiRes::time },
+      run    => $code,
+      after  => sub { warn "running \$code took " . Time::HiRes::time - $start . " seconds\n" },
+    );
+
 =head1 BUGS
 
 This documentation is frivolous.
 
 =head1 AUTHOR
 
-Belden Lyman <belden@cpan.org>
+(c) 2012 Belden Lyman <belden@cpan.org>
+
+=head1 LICENSE
+
+Artistic license v2.0.
