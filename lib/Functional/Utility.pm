@@ -8,9 +8,9 @@ use Time::HiRes ();
 
 our @EXPORT_OK = qw(context hook_run_hook hook_run throttle);
 
-# most of my modules start at 0.01. This one starts at 1.00 because
+# most of my modules start at 0.01. This one starts at 1.01 because
 # I actually use this code in production.
-our $VERSION = 1.00;
+our $VERSION = 1.01;
 
 sub context {
 	my ($lookback) = @_;
