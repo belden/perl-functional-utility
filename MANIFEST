@@ -1,6 +1,5 @@
 lib/Functional/Utility.pm
 Makefile.PL
-MANIFEST
 README.md
 t/context.t
 t/hook_run.t
@@ -9,3 +8,4 @@ t/lib/Test/Resub.pm
 t/throttle_delay.t
 t/throttle_factor.t
 MANIFEST
+LICENSE
