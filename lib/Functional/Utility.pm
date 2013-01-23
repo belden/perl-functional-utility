@@ -1,8 +1,7 @@
-package Functional::Utility;
-use base qw(Exporter);
-
 use strict;
 use warnings;
+package Functional::Utility;
+use base qw(Exporter);
 
 use Time::HiRes ();
 
