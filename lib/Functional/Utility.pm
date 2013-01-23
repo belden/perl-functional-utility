@@ -104,10 +104,10 @@ Throttle a given piece of code so it only runs once every N seconds:
 
     throttle { print scalar(localtime) . "\n" } delay => $N for 1..5;
 
-Throttle a given piece of code so it waits three times as long between runs
+Throttle a given piece of code so it waits N times as long between runs
 as a single run takes:
 
-    throttle { print scalar(localtime) . "\n"; sleep 1 } factor => 3 for 1..5;
+    throttle { print scalar(localtime) . "\n"; sleep 1 } factor => $N for 1..5;
 
 Add before and after hooks around some coderef, calling and returning coderef's output
 back to caller in the correct context:
@@ -120,9 +120,9 @@ back to caller in the correct context:
       after  => sub { warn "running \$code took " . Time::HiRes::time - $start . " seconds\n" },
     );
 
-=head1 BUGS
+=head1 BUGS AND LIMITATIONS
 
-This documentation is frivolous.
+None known.
 
 =head1 AUTHOR
 
@@ -130,4 +130,4 @@ This documentation is frivolous.
 
 =head1 LICENSE
 
-Artistic license v2.0.
+You may use and redistribute this software under the same terms as Perl itself.
