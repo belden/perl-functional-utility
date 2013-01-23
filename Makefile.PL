@@ -13,9 +13,10 @@ WriteMakefile(
   },
   META_MERGE => {
     resources => {
-      bugtracker => 'https://github.shuttercorp.net/blyman/perl-Functional-Utility/issues',
+      bugtracker => 'https://github.com/belden/perl-functional-utility/issues',
     },
   },
+	LICENSE => 'perl',
   dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
   clean               => { FILES => 'Functional-Utility-*' },
  );
