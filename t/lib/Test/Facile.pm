@@ -7,7 +7,7 @@ require Test::More;
 
 our $VERSION = 1.00;
 
-our @EXPORT_OK = qw(nearly_ok nearly each_ok);
+our @EXPORT_OK = qw(nearly_ok nearly each_ok deep_ok);
 
 sub nearly_ok {
   my ($got, $expected, $epsilon, $message) = @_;
@@ -56,6 +56,13 @@ sub each_ok (&@) {
 
 	local $Test::Builder::Level = $Test::Builder::Level + 1;
 	return Test::More::is_deeply( \@bad, [] );
+}
+
+sub deep_ok ($$;$) {
+	local $Test::Builder::Level = $Test::Builder::Level + 1;
+	Test::More::is_deeply( @_ )
+		? return 1
+		: do { require Data::Dumper; Test::More::diag(Data::Dumper::Dumper(@_[0,1])); return 0 };
 }
 
 1;
