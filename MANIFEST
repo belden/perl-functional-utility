@@ -10,3 +10,4 @@ t/throttle_factor.t
 t/y_combinator.t
 MANIFEST
 LICENSE
+MANIFEST.SKIP
