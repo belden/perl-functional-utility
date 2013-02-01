@@ -13,9 +13,9 @@ our @EXPORT_OK = qw(
   y_combinator
 );
 
-# most of my modules start at 0.01. This one starts at 1.01 because
+# most of my modules start at 0.01. This one started at 1.01 because
 # I actually use this code in production.
-our $VERSION = 1.01;
+our $VERSION = 1.02;
 
 sub context {
 	my ($lookback) = @_;
@@ -278,12 +278,12 @@ L<http://github.com/belden/perl-functional-utility/issues>.
 =head1 A NOTE ON CONTRIBUTING
 
 This is a growing collection. You may contribute your own functional utilities via this
-project's Github page: L<http://github.com/belden/perl-functional-utility/issues>.
+project's Github page: L<http://github.com/belden/perl-functional-utility>.
 
-=head1 AUTHOR
+=head1 COPYRIGHT AND LICENSE
 
-(c) 2013 Belden Lyman <belden@cpan.org>
+    (c) 2013 by Belden Lyman
 
-=head1 LICENSE
-
-You may use and redistribute this software under the same terms as Perl itself.
+This library is free software: you may redistribute it and/or modify it under the same terms as Perl
+itself; either Perl version 5.8.8 or, at your option, any later version of Perl 5 you may have
+available.
