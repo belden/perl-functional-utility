@@ -14,6 +14,7 @@ WriteMakefile(
   META_MERGE => {
     resources => {
       bugtracker => 'https://github.com/belden/perl-functional-utility/issues',
+      repository => 'https://github.com/belden/perl-functional-utility',
     },
   },
 	LICENSE => 'perl',
